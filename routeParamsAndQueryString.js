@@ -30,6 +30,30 @@ app.get('/api/products/:productID/reviews/:reviewID',(req,res)=>{
 })//if we use the same route on server hello world is outputted and we have { productID: '4', reviewID: 'abc' }
 //in our terminal.ie here /:productID is 4 and :/reviewID is abc
 
+//QUERY STRING
+app.get('/api/v1/query',(req,res)=>{
+    //console.log(req.query)
+    //res.send('hello world')
+    const {search,limit}=req.query
+    let sortedProducts=[...products]
+
+    if(search){
+        sortedProducts=sortedProducts.filter((product)=>{
+            return product.name.startsWith(search)
+        })
+    }
+    if(limit){
+        sortedProducts=sortedProducts.slice(0,Number(limit))
+    }
+    
+    if(sortedProducts.length <1){
+        //return res.status(200).send('no products matched your search')
+        res.status(200).json({success:true,data:[]})
+    }
+    res.status(200).json(sortedProducts)
+
+})
+
 app.listen(2000,()=>{
     console.log('server is listening on port 2000')
 })
